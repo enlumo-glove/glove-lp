@@ -1,7 +1,7 @@
 'use strict';
 const Core=ENLUMOSimulatorCore;
 const sources={front:'photo-front.webp',back:'photo-back.webp',pinky:'photo-pinky.webp',thumb:'photo-thumb.webp'};
-const defaults={body:'#eee8dc',lace:'#c8a15b'};
+const defaults={body:'#eee8dc',lace:'#d4af37'};
 let face='front',zoom=1,colors={...defaults},cache={},ready=false,threadColor='#76513b';
 const embroidery={palm:'',pinky:'',ring:'',middle:'',index:'',thumb:'',wrist:''};
 const zones={front:[['palm','捕球面']],back:[['wrist','手首']],pinky:[['pinky','小指（側面）']],thumb:[['thumb','親指（側面）']]};
@@ -10,9 +10,9 @@ const styles=Object.fromEntries(Object.keys(embroidery).map(key=>[key,{font:'ser
 const positionDefaults={front:{palm:{x:.5,y:.65}},back:{pinky:{x:.22,y:.36},ring:{x:.385,y:.34},middle:{x:.54,y:.33},index:{x:.69,y:.34},thumb:{x:.835,y:.43},wrist:{x:.5,y:.90}},pinky:{pinky:{x:.5,y:.50}},thumb:{thumb:{x:.5,y:.50}}};
 const positions=JSON.parse(JSON.stringify(positionDefaults));let textBoxes=[],dragState=null;
 const canvas=document.querySelector('#canvas'),ctx=canvas.getContext('2d');
-const palette=[['アイボリー','#eee8dc'],['ホワイト','#ffffff'],['キャメル','#c98a43'],['ライトキャメル','#d5a66f'],['オレンジ','#e87522'],['ピンク','#e9a7bb'],['ミント','#8bbfb6'],['レッド','#b72f3d'],['ネイビー','#203c63'],['ブラック','#242424'],['ゴールド','#c8a15b']];
+const palette=[['アイボリー','#eee8dc'],['ホワイト','#ffffff'],['キャメル','#c98a43'],['ライトキャメル','#d5a66f'],['オレンジ','#e87522'],['ピンク','#e9a7bb'],['ミント','#8bbfb6'],['レッド','#c62832'],['ネイビー','#203c63'],['ブラック','#242424'],['ゴールド','#d4af37']];
 // Leather uses softer tints; laces retain their original palette.
-const bodyPalette=palette.map(([name,hex])=>[name,'#'+Core.hexRgb(hex).map(v=>Math.round(v+(255-v)*.32).toString(16).padStart(2,'0')).join('')]);
+const bodyPalette=palette.map(([name,hex])=>[name,['レッド','ゴールド'].includes(name)?hex:'#'+Core.hexRgb(hex).map(v=>Math.round(v+(255-v)*.32).toString(16).padStart(2,'0')).join('')]);
 defaults.body=bodyPalette[0][1];colors.body=defaults.body;
 
 function load(src){return new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=im.width;c.height=im.height;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0);const d=x.getImageData(0,0,c.width,c.height);resolve({d,prepared:Core.prepare(d.data),w:im.width,h:im.height})};im.onerror=reject;im.src=src;});}
@@ -27,7 +27,7 @@ function renderControls(){const host=document.querySelector('#embroideryControls
 const threadLabel=document.createElement('label');threadLabel.className='custom';threadLabel.textContent='刺繍の色';const picker=document.createElement('input');picker.type='color';picker.value=threadColor;picker.setAttribute('aria-label','刺繍の色');picker.oninput=()=>{threadColor=picker.value;render();};threadLabel.append(picker);document.querySelector('#embroideryControls').before(threadLabel);
 for(const f of Object.keys(sources))document.querySelector('#'+f).onclick=()=>{face=f;renderControls();render();};
 document.querySelector('#plus').onclick=()=>{zoom=Math.min(1.3,zoom+.1);render();};document.querySelector('#minus').onclick=()=>{zoom=Math.max(.6,zoom-.1);render();};document.querySelector('#goTop').onclick=()=>location.href='../index.html';document.querySelector('#resetTextPositions').onclick=()=>{for(const f of Object.keys(positionDefaults))positions[f]=JSON.parse(JSON.stringify(positionDefaults[f]));render();};document.querySelector('#reset').onclick=()=>{colors={...defaults};zoom=1;render();};document.querySelector('#download').onclick=()=>{if(!ready)return;const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download='ENLUMO-'+face+'.png';a.click();};
-function buildOrderUrl(){const name=(hex,set)=>set.find(([,c])=>c===hex)?.[0]||hex;const details=Object.entries(embroidery).filter(([,text])=>text).map(([key,text])=>{const st=styles[key];return `${({palm:'捕球面',pinky:'小指',ring:'薬指',middle:'中指',index:'人差し指',thumb:'親指',wrist:'手首'})[key]}：${text}（${fonts[st.font].label}・サイズ${st.size}・丸み${st.curve}）`;}).join(' / ');const params=new URLSearchParams({model:'ENLUMO カスタムグローブ',body:name(colors.body,bodyPalette)+'（淡色）',lace:name(colors.lace,palette),stitch:threadColor,embroidery:(details||'なし')+(window.ENLUMOWebArt?.summary()||''),embroidery_layout:JSON.stringify({styles,positions}),price:'49000'});return '../order.html?'+params.toString();}
+function buildOrderUrl(){const name=(hex,set)=>set.find(([,c])=>c===hex)?.[0]||hex;const details=Object.entries(embroidery).filter(([,text])=>text).map(([key,text])=>{const st=styles[key];return `${({palm:'捕球面',pinky:'小指',ring:'薬指',middle:'中指',index:'人差し指',thumb:'親指',wrist:'手首'})[key]}：${text}（${fonts[st.font].label}・サイズ${st.size}・丸み${st.curve}）`;}).join(' / ');const params=new URLSearchParams({model:'ENLUMO カスタムグローブ',body:name(colors.body,bodyPalette)+(['レッド','ゴールド'].includes(name(colors.body,bodyPalette))?'':'（淡色）'),lace:name(colors.lace,palette),stitch:threadColor,embroidery:(details||'なし')+(window.ENLUMOWebArt?.summary()||''),embroidery_layout:JSON.stringify({styles,positions}),price:'49000'});return '../order.html?'+params.toString();}
 window.ENLUMOSimulator={render,getFace:()=>face,setFace:f=>{face=f;renderControls();render();}};
 document.querySelector('#nextPage').onclick=()=>location.href=buildOrderUrl();
 Promise.all(Object.entries(sources).map(async([key,src])=>cache[key]=await load(src))).then(()=>{ready=true;renderControls();render();}).catch(()=>document.querySelector('#status').textContent='画像を読み込めませんでした。ページを開き直してください。');

@@ -71,7 +71,7 @@
         </dl>
         <div class="price-row">
           <span>商品価格</span>
-          <div><span class="price" id="show-price">¥55,000</span> <small>税込</small></div>
+          <div><span class="price" id="show-price">¥49,000</span> <small>税込</small></div>
         </div>
         <div class="delivery">
           <strong>納期の目安：約2か月</strong>
@@ -142,7 +142,7 @@
         lace: "ネイビー",
         stitch: "ホワイト",
         embroidery: "R. Takumi",
-        price: "55000"
+        price: "49000"
       };
 
       const form = document.getElementById("order-form");
@@ -156,7 +156,7 @@
       });
       const values = {};
       Object.keys(defaults).forEach(key => {
-        values[key] = params.get(key) || defaults[key];
+        values[key] = key === "price" ? defaults.price : (params.get(key) || defaults[key]);
         const hidden = document.getElementById(key);
         if (hidden) hidden.value = values[key];
       });
@@ -167,7 +167,7 @@
       document.getElementById("show-stitch").textContent = values.stitch;
       document.getElementById("show-embroidery").textContent = values.embroidery;
 
-      const priceNumber = Number(String(values.price).replace(/[^\d]/g,"")) || 55000;
+      const priceNumber = Number(String(values.price).replace(/[^\d]/g,"")) || 49000;
       document.getElementById("show-price").textContent = "¥" + priceNumber.toLocaleString("ja-JP");
     })();
   </script>

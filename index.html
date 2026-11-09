@@ -181,7 +181,7 @@
     .section-title{text-align:center;font-size:36px;font-weight:400;margin-bottom:12px}
     .section-lead{text-align:center;color:#766b61;margin-bottom:50px}
     .products{background:#f5f0e8}
-    .product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;align-items:stretch}
+    .product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;align-items:stretch}
     .product-card{
       position:relative;background:#fff;border-radius:18px;overflow:hidden;
       box-shadow:0 10px 35px rgba(0,0,0,.06);display:flex;flex-direction:column;min-width:0
@@ -310,7 +310,7 @@
           <h1>野球人生のストーリーを、<br>
             人生最高の贈り物に。
           </h1>
-          <p>結婚式も、卒団も、野球観戦も、自分のためにも。<br>
+          <p>結婚式、還暦祝い、マネージャーへの感謝に。自分のためにも。<br>
           名前・日付・想いを刻んだ、世界にひとつのグローブを。</p>
           <a href="#products" class="main-btn" onclick="track('hero_products')">商品を見る →</a>
         </div>
@@ -327,7 +327,7 @@
     <section class="products" id="products">
       <div class="container">
         <h2 class="section-title">想いに合わせて選ぶグローブ</h2>
-        <p class="section-lead">大切な節目から、スタジアムでの一日まで。</p>
+        <p class="section-lead">人生の節目に、支えてくれた人に。そして、自分自身に。</p>
         <div class="product-grid">
 
           <article class="product-card">
@@ -354,20 +354,39 @@
 
           <article class="product-card">
             <div class="product-visual graduation-visual">
-              <span class="popular-badge">MINT STITCH / MINT LACE</span>
-              <img src="./enlumo-photo-mint-hero.webp"
-                   alt="ENLUMO 卒団・卒業記念グローブ"
+              <span class="popular-badge">RED × WHITE</span>
+              <img src="./enlumo-kanreki-red-white.webp"
+                   alt="ENLUMO 還暦祝いのグローブ"
                    class="graduation-glove-img">
             </div>
             <div class="product-content">
-              <div class="product-label">GRADUATION GLOVE</div>
-              <h3>卒団・卒業記念グローブ</h3>
-              <p class="product-copy">仲間と過ごした時間を、形に残す。名前・背番号・チーム名を入れた、節目の記念品。</p>
+              <div class="product-label">60TH BIRTHDAY GLOVE</div>
+              <h3>還暦祝いのグローブ</h3>
+              <p class="product-copy">60年の歩みに、ありがとう。赤と白を基調に、名前や記念日、感謝のメッセージを刻む特別な贈り物。</p>
+              <div class="price">55,000円 <span class="tax">（税抜50,000円）</span></div>
+              <p style="font-size:12px;color:#66584b;margin:10px 0">配色イメージです。製作仕様はご注文時に確認します。</p><div class="colors">BASE COLOR：RED / WHITE</div>
+              <div class="color-dots"><i class="dot red"></i><i class="dot white"></i></div>
+              <div class="premium">赤・白を基調にカスタマイズできます</div>
+              <br><a href="./custom/" class="purchase-btn" onclick="track('buy_kanreki')">このグローブをつくる →</a>
+            </div>
+          </article>
+
+          <article class="product-card">
+            <div class="product-visual graduation-visual">
+              <span class="popular-badge">MINT STITCH / MINT LACE</span>
+              <img src="./enlumo-photo-mint-hero.webp"
+                   alt="ENLUMO マネージャーへのプレゼント"
+                   class="graduation-glove-img">
+            </div>
+            <div class="product-content">
+              <div class="product-label">THANK YOU, MANAGER</div>
+              <h3>マネージャーへのプレゼント</h3>
+              <p class="product-copy">いつもチームを支えてくれたあなたへ。名前やチーム名、感謝の言葉を刻み、仲間みんなの想いを贈る。</p>
               <div class="price">55,000円 <span class="tax">（税抜50,000円）</span></div>
               <div class="colors">WHITE / BLUE / RED / YELLOW / BLACK</div>
               <div class="color-dots"><i class="dot white"></i><i class="dot blue"></i><i class="dot red"></i><i class="dot yellow"></i><i class="dot black"></i><i class="dot purple"></i><i class="dot lime"></i></div>
               <div class="premium">ALL COLORS：55,000円（税込）</div>
-              <br><a href="./custom/" class="purchase-btn" onclick="track('buy_graduation')">このグローブをつくる →</a>
+              <br><a href="./custom/" class="purchase-btn" onclick="track('buy_manager')">このグローブをつくる →</a>
             </div>
           </article>
 

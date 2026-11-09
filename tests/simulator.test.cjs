@@ -1,0 +1,5 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+const core=require('../custom/simulator-core.js');
+test('白への色替えは暗い革も紐も無彩色になり、元の黄みが残らない',()=>{const src=new Uint8ClampedArray([230,220,192,255,80,65,45,255,210,145,25,255,75,48,10,255,12,8,4,0]);const p=core.prepare(src),out=core.recolor(src,p,'#ffffff','#ffffff');for(let i=0;i<16;i+=4){assert.equal(out[i],out[i+1]);assert.equal(out[i+1],out[i+2]);}assert.equal(out[19],0);assert.ok(out[4]<out[0]);});
+test('元の色に関係なく赤の暗部に緑・青の色残りが出ない',()=>{const src=new Uint8ClampedArray([230,220,192,255,80,65,45,255,210,145,25,255,75,48,10,255]);const out=core.recolor(src,core.prepare(src),'#ff0000','#ff0000');for(let i=0;i<out.length;i+=4){assert.ok(out[i]>0);assert.equal(out[i+1],0);assert.equal(out[i+2],0);}});
+test('円弧の上下が切り替わり、接線に沿って文字が傾く',()=>{const upper=core.arcPoint(0,100,50),lower=core.arcPoint(0,100,-50);assert.equal(upper.y,-50);assert.equal(lower.y,50);assert.equal(Math.abs(core.arcPoint(100,100,50).y),0);assert.ok(core.arcPoint(-50,100,50).angle<0);assert.ok(core.arcPoint(50,100,50).angle>0);assert.equal(core.arcPoint(25,100,0).angle,0);});

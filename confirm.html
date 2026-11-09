@@ -164,7 +164,7 @@
     }
   </style>
   <link rel="stylesheet" href="./order-support.css">
-  <script src="./order-support.js"></script>
+  <script src="./order-support.js?v=20261109-friend-only"></script>
 <link rel="stylesheet" href="./brand.css"></head>
 <body>
   <div class="wrap">
@@ -244,14 +244,14 @@
         <button type="button" class="secondary" id="edit-button">修正する</button>
         <button type="submit" class="primary" disabled>この内容で注文リクエストを送る</button>
       </div>
-      <p class="footnote">仕様・納期の確認後にお支払いをご案内します。LINE対応の方は、友だち追加とお名前の送信をお済ませください。</p>
+      <p class="footnote">仕様・納期の確認後にお支払いをご案内します。LINE対応の方は、公式LINEの友だち追加をお済ませください。</p>
     </form>
   </div>
 
   <script>
   (() => {
     const params = new URLSearchParams(location.search);
-    const fields = ["model","body","lace","stitch","embroidery","price","name","kana","email","tel","postal","address","note","contact_method","line_name","line_ready"];
+    const fields = ["model","body","lace","stitch","embroidery","embroidery_layout","price","name","kana","email","tel","postal","address","note","contact_method","line_ready"];
     const payload = Object.fromEntries(fields.map(key => [key, params.get(key) || ""]));
     payload.price = "49000";
     payload.contact_method = payload.contact_method || "line";
@@ -271,7 +271,7 @@
     button.disabled = Boolean(validation);
     document.getElementById("support-summary").textContent = payload.contact_method === "email"
       ? "メールでのご連絡：" + payload.email
-      : "LINEでのご連絡 ／ 表示名：" + (payload.line_name || "未入力") + "。友だち追加・お名前の送信を確認後に対応します。";
+      : "LINEでのご連絡 ／ 公式LINEの友だち追加済み";
     if (validation) {
       const error = document.getElementById("support-error");
       error.textContent = validation + "「ご連絡方法・入力内容を変更する」からご入力ください。";
@@ -287,7 +287,7 @@
       sending = true;
       button.disabled = true;
       button.textContent = "送信中…";
-      const request = {...payload, note: (payload.note ? payload.note + "\n\n" : "") + ENLUMOSupport.supportNote(payload)};
+      const request = {...payload, note: (payload.note ? payload.note + "\n\n" : "") + ENLUMOSupport.supportNote(payload) + (payload.embroidery_layout ? "\n【刺繍の位置・書式】\n" + payload.embroidery_layout : "")};
       try {
         const response = await fetch("https://script.google.com/macros/s/AKfycbya0g1vW_kDzo-K1LCyte45ljvY-h02TY8Y5kuiLhwoTQO1D69h5ut2RcWxLpNxGUNO/exec", {
           method: "POST", headers: {"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(request)

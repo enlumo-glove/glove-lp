@@ -262,28 +262,43 @@
       .product-visual{height:330px;padding:24px}
       .product-image{height:210px}
     }
-  </style>
-</head>
-<body>
-  <div id="opening" aria-hidden="true">
-    <div class="opening-copy">
-      <small>ENLUMO</small>
-      <h1>野球好きな誰かにとって、<br>一生の思い出になる。</h1>
-    </div>
-  </div>
+  
+    /* Readable, balanced introduction */
+    header{padding:14px clamp(20px,5vw,72px);gap:20px;background:rgba(255,253,249,.97)}
+    nav{font-size:14px;gap:24px;font-family:system-ui,-apple-system,sans-serif}
+    .header-btn{font-size:13px;font-weight:650;padding:12px 20px;white-space:nowrap}
+    .hero{min-height:min(820px,100svh);padding:146px clamp(24px,5vw,84px) 64px;background:linear-gradient(110deg,#fffdfa 0%,#fbf6ee 55%,#efe3cf 100%)}
+    .hero-inner{max-width:1360px;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:48px}
+    .hero-text{min-width:0}.hero .eyebrow{font:700 12px/1.5 system-ui,-apple-system,sans-serif;letter-spacing:2.8px;color:#795b38;margin-bottom:22px}
+    .hero h1{font-size:clamp(34px,3.4vw,56px);font-weight:600;line-height:1.5;letter-spacing:.02em;color:#29231f;margin-bottom:24px}
+    .hero-text p{font-size:18px;line-height:1.95;color:#4a4038;margin-bottom:30px}
+    .hero .main-btn{font-family:system-ui,-apple-system,sans-serif;font-size:16px;font-weight:650;min-height:54px;padding:16px 30px;background:#332a23}
+    .glove-box{min-width:0;min-height:420px;align-items:center}.hero-glove{width:100%;max-width:600px;filter:drop-shadow(0 18px 24px rgba(73,50,24,.10))}
+    @media(max-width:850px){
+      header{padding:10px 20px;gap:12px}nav{gap:0}.header-btn{padding:11px 16px}
+      .hero{padding:114px 22px 44px;min-height:auto;background:linear-gradient(150deg,#fffdfa 0%,#f7f0e5 75%,#eee0ca 100%)}
+      .hero-inner{grid-template-columns:1fr;gap:24px}.hero-text{text-align:left}
+      .hero .eyebrow{font-size:11px;letter-spacing:2px;margin-bottom:16px}
+      .hero h1{font-size:clamp(23px,6.9vw,40px);line-height:1.55;margin-bottom:18px;letter-spacing:0}
+      .hero-text p{font-size:16px;line-height:1.9;margin-bottom:24px}.hero-text p br{display:none}
+      .hero .main-btn{width:100%;max-width:360px;min-height:52px;text-align:center;font-size:16px}
+      .glove-box{min-height:0}.hero-glove{width:100%;max-width:440px;max-height:380px;object-fit:contain}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
 
+  </style>
+<link rel="stylesheet" href="./brand.css"></head>
+<body>
  <header>
   <a href="./index.html" class="logo" aria-label="ENLUMO トップへ">
-   <img src="./enlumo-lion.png" alt="" class="logo-lion">
-    <span class="logo-name">ENLUMO</span>
+<img class="brand-lockup" src="./enlumo-logo-2026.webp" alt="ENLUMO" width="240" height="52">
   </a>
 
   <nav>
     <a href="#products">商品</a>
     <a href="#personal">自分用</a>
-    <a href="#display">飾る</a>
     <a href="#flow">ご注文の流れ</a>
-    <a href="./custom/" class="sim-btn">3Dシミュレーション</a>
+    <a href="./custom/" class="sim-btn header-btn">カスタマイズ</a>
   </nav>
 </header>
 
@@ -381,7 +396,7 @@
       </div>
     </section>
 
-    <section class="self-section">
+    <section class="self-section" id="personal">
       <div class="container">
         <div class="self-card">
           <div class="eyebrow">FOR YOURSELF</div>

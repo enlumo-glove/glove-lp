@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>オーダーについて相談する｜ENLUMO</title>
+  <title>オーダーを相談する｜ENLUMO</title>
 
   <style>
     * {
@@ -236,6 +236,8 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="./order-support.css">
+  <script src="./order-support.js"></script>
 </head>
 
 <body>
@@ -255,7 +257,7 @@
       <div class="page-title">
         <div class="eyebrow">CONTACT</div>
 
-        <h1>オーダーについて相談する</h1>
+        <h1>オーダーを相談する</h1>
 
         <p class="lead">
           「何を選べばいいかわからない」でも大丈夫です。<br>
@@ -265,7 +267,8 @@
 
       <div class="form-box">
 
-       <form  id="contact-form">
+       <form id="contact-form">
+  <div data-contact-preference></div>
  
   <!-- この下に現在のフォーム項目が続く -->
 
@@ -442,6 +445,7 @@
 
 <script>
   const form = document.getElementById("contact-form");
+  ENLUMOSupport.mount(form, new URLSearchParams(location.search));
 
 
   // トップページの商品ボタンから遷移した場合、商品を自動選択
@@ -461,6 +465,9 @@
   form.addEventListener("submit", async function(event) {
     event.preventDefault();
 
+    const supportData = Object.fromEntries(new FormData(form));
+    const supportError = ENLUMOSupport.validateContact(supportData);
+    if (supportError) { alert(supportError); return; }
     const button = form.querySelector('button[type="submit"]');
     const originalText = button.textContent;
 
@@ -468,6 +475,8 @@
     button.textContent = "送信中...";
 
     const formData = new FormData(form);
+    formData.set("message", String(formData.get("message") || "") + "\n\n" + ENLUMOSupport.supportNote(supportData));
+    formData.set("_subject", "ENLUMO ご相談（" + (supportData.contact_method === "email" ? "メール対応" : "LINE対応") + "）");
 
     try {
       // ① Formspree → 運営側へ通知
@@ -514,7 +523,7 @@
       // ④ 少し待ってからありがとうページへ
       setTimeout(function() {
         window.location.href =
-          "./thanks.html";
+          "./thanks.html?channel=" + encodeURIComponent(supportData.contact_method);
       }, 2000);
 
     } catch (error) {

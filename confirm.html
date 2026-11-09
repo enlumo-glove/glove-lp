@@ -163,6 +163,8 @@
       .line-button{display:block;width:100%}
     }
   </style>
+  <link rel="stylesheet" href="./order-support.css">
+  <script src="./order-support.js"></script>
 </head>
 <body>
   <div class="wrap">
@@ -173,8 +175,8 @@
 
     <section class="hero">
       <p class="eyebrow">ORDER CONFIRMATION</p>
-      <h1>お振込みのご案内</h1>
-      <p class="lead">ご注文内容をご確認のうえ、下記口座へ商品代金をお振込みください。</p>
+      <h1>ご注文リクエストの確認</h1>
+      <p class="lead">ご連絡方法とご注文内容をご確認ください。仕様と納期は担当者と相談して確定します。</p>
     </section>
 
     <section class="card">
@@ -209,60 +211,16 @@
       </div>
     </section>
 
-    <section class="card line-card">
-      <p class="line-step">ORDER SUPPORT</p>
-      <h2>ご注文前にLINEをご登録ください</h2>
-      <p class="line-text">
-        ENLUMOでは、ご注文後の仕様確認・刺繍内容の確認・完成までのご連絡を公式LINEで行います。
-      </p>
-
-      <div class="line-box">
-        <div class="line-qr">
-          <img
-            src="https://qr-official.line.me/gs/M_414bllir_GW.png?oat_content=qr"
-            alt="ENLUMO公式LINE QRコード">
-          <span>スマートフォンで読み取る</span>
-        </div>
-
-        <div class="line-action">
-          <strong>ENLUMO公式LINE</strong>
-          <p>友だち追加後、このページに戻って振込み・受付手続きへお進みください。</p>
-          <a
-            href="https://lin.ee/WQajS4j"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="line-button">
-            LINEで友だち追加する →
-          </a>
-        </div>
-      </div>
-
-      <p class="line-note">
-        ※ LINEの友だち追加後も、この画面で「振込み内容を確認して受付を完了する」操作が必要です。
-      </p>
-    </section>
-
     <section class="card">
-      <h2>お振込み先</h2>
-      <p>下記の三井住友銀行口座へ、表示されている商品代金をお振込みください。</p>
-
-      <div class="bank-card">
-        <p class="bank-title">三井住友銀行</p>
-        <div class="bank-row"><div class="bank-label">支店名</div><div>【支店名を入力】</div></div>
-        <div class="bank-row"><div class="bank-label">口座種別</div><div>普通</div></div>
-        <div class="bank-row"><div class="bank-label">口座番号</div><div>【口座番号を入力】</div></div>
-        <div class="bank-row"><div class="bank-label">口座名義</div><div>【口座名義を入力】</div></div>
-        <div class="bank-row"><div class="bank-label">お振込み金額</div><div><strong id="bank-price">¥55,000（税込）</strong></div></div>
-      </div>
-
-      <div class="important">
-        <strong>ご入金確認後にご注文確定となります。</strong>
-        お振込み後、ENLUMOにてご入金を確認した時点でご注文確定となり、製作を開始いたします。ご入金が確認できない場合、ご注文は確定されません。
-      </div>
-
-      <p class="footnote" style="max-width:none;text-align:left;margin-top:12px">
-        ※ 振込手数料はお客様のご負担となります。お振込みの際は、ご注文者様と同じお名前でお振込みください。
-      </p>
+      <h2>ご連絡方法</h2>
+      <p id="support-summary" class="support-status"></p>
+      <p id="support-error" class="support-error" role="alert" hidden></p>
+      <a href="./order.html" id="support-edit" class="back">ご連絡方法・入力内容を変更する →</a>
+    </section>
+    <section class="card">
+      <h2>お申し込み後の流れ</h2>
+      <ol><li>担当者より、ご指定の方法でご連絡します。</li><li>刺繍・仕様・納期を確認し、正式な内容とお振込み先をご案内します。</li><li>内容にご了承いただき、ご入金確認後にご注文確定・製作開始となります。</li></ol>
+      <p class="footnote">この送信だけでは契約・注文は確定しません。お支払いは担当者からのご案内後にお願いいたします。</p>
     </section>
 
     <section class="card">
@@ -279,137 +237,73 @@
     </section>
 
     <form id="confirm-form" action="./thanks.html" method="get">
+      <p id="send-error" class="support-error" role="alert" hidden></p>
       <div id="hidden-fields"></div>
 
       <div class="actions">
         <button type="button" class="secondary" id="edit-button">修正する</button>
-        <button type="submit" class="primary">振込み内容を確認して受付を完了する</button>
+        <button type="submit" class="primary" disabled>この内容で注文リクエストを送る</button>
       </div>
-      <p class="footnote">この操作では注文はまだ確定しません。ENLUMOでご入金を確認後、正式にご注文確定となります。</p>
+      <p class="footnote">仕様・納期の確認後にお支払いをご案内します。LINE対応の方は、友だち追加とお名前の送信をお済ませください。</p>
     </form>
   </div>
 
   <script>
-    (() => {
-      const params = new URLSearchParams(location.search);
-
-      const fields = [
-        "model","body","lace","stitch","embroidery","price",
-        "name","kana","email","tel","postal","address","note"
-      ];
-
-      const fallback = {
-        model:"内野手用",
-        body:"レッド",
-        lace:"ネイビー",
-        stitch:"ホワイト",
-        embroidery:"R. Takumi",
-        price:"55000"
-      };
-
-      const value = key => params.get(key) || fallback[key] || "";
-
-      const setText = (id, text) => {
-        document.getElementById(id).textContent = text || "なし";
-      };
-
-      setText("show-model", value("model"));
-      setText("show-body", value("body"));
-      setText("show-lace", value("lace"));
-      setText("show-stitch", value("stitch"));
-      setText("show-embroidery", value("embroidery"));
-      setText("show-name", value("name"));
-      setText("show-kana", value("kana"));
-      setText("show-email", value("email"));
-      setText("show-tel", value("tel"));
-      setText("show-postal", value("postal"));
-      setText("show-address", value("address"));
-      setText("show-note", value("note"));
-
-      const priceNumber = Number(String(value("price")).replace(/[^\d]/g, "")) || 55000;
-      const formattedPrice = "¥" + priceNumber.toLocaleString("ja-JP");
-      document.getElementById("show-price").textContent = formattedPrice;
-      document.getElementById("bank-price").textContent = formattedPrice + "（税込）";
-
-      const hiddenFields = document.getElementById("hidden-fields");
-      fields.forEach(key => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = key;
-        input.value = value(key);
-        hiddenFields.appendChild(input);
-      });
-
-      document.getElementById("edit-button").addEventListener("click", () => {
-        const query = new URLSearchParams();
-        fields.forEach(key => query.set(key, value(key)));
-        location.href = "./order.html?" + query.toString();
-      });
-    })();
+  (() => {
+    const params = new URLSearchParams(location.search);
+    const fields = ["model","body","lace","stitch","embroidery","price","name","kana","email","tel","postal","address","note","contact_method","line_name","line_ready"];
+    const payload = Object.fromEntries(fields.map(key => [key, params.get(key) || ""]));
+    payload.contact_method = payload.contact_method || "line";
+    for (const key of fields) {
+      const el = document.getElementById("show-" + key);
+      if (el) el.textContent = payload[key] || "なし";
+    }
+    const price = Number(String(payload.price).replace(/[^\d]/g, "")) || 55000;
+    document.getElementById("show-price").textContent = "¥" + price.toLocaleString("ja-JP");
+    const editUrl = "./order.html?" + params.toString();
+    document.getElementById("support-edit").href = editUrl;
+    document.querySelector("header .back").href = editUrl;
+    document.getElementById("edit-button").onclick = () => { location.href = editUrl; };
+    const form = document.getElementById("confirm-form");
+    const button = form.querySelector('button[type="submit"]');
+    const validation = ENLUMOSupport.validateOrder(payload);
+    button.disabled = Boolean(validation);
+    document.getElementById("support-summary").textContent = payload.contact_method === "email"
+      ? "メールでのご連絡：" + payload.email
+      : "LINEでのご連絡 ／ 表示名：" + (payload.line_name || "未入力") + "。友だち追加・お名前の送信を確認後に対応します。";
+    if (validation) {
+      const error = document.getElementById("support-error");
+      error.textContent = validation + "「ご連絡方法・入力内容を変更する」からご入力ください。";
+      error.hidden = false;
+      button.disabled = true;
+    }
+    let sending = false;
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      if (sending || ENLUMOSupport.validateOrder(payload)) return;
+      const error = document.getElementById("send-error");
+      error.hidden = true;
+      sending = true;
+      button.disabled = true;
+      button.textContent = "送信中…";
+      const request = {...payload, note: (payload.note ? payload.note + "\n\n" : "") + ENLUMOSupport.supportNote(payload)};
+      try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbya0g1vW_kDzo-K1LCyte45ljvY-h02TY8Y5kuiLhwoTQO1D69h5ut2RcWxLpNxGUNO/exec", {
+          method: "POST", headers: {"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(request)
+        });
+        if (!response.ok) throw new Error("send failed");
+        const result = await response.json();
+        if (!result.success) throw new Error("send failed");
+        location.href = "./thanks.html?channel=" + encodeURIComponent(payload.contact_method) + "&type=order";
+      } catch (e) {
+        error.textContent = "送信できませんでした。内容はこの画面に残っています。時間をおいて再度お試しいただくか、公式LINEからご連絡ください。";
+        error.hidden = false;
+        sending = false;
+        button.disabled = false;
+        button.textContent = "もう一度送信する";
+      }
+    });
+  })();
   </script>
-
-<script>
-(function() {
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbya0g1vW_kDzo-K1LCyte45ljvY-h02TY8Y5kuiLhwoTQO1D69h5ut2RcWxLpNxGUNO/exec";
-  const form = document.getElementById("confirm-form");
-  if (!form) return;
-
-  form.addEventListener("submit", async function(e) {
-    e.preventDefault();
-
-    const btn = form.querySelector('button[type="submit"]');
-    const originalText = btn ? btn.textContent : "";
-
-    if (btn) {
-      btn.disabled = true;
-      btn.textContent = "送信中...";
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    const payload = {
-      name: params.get("name") || "",
-      kana: params.get("kana") || "",
-      email: params.get("email") || "",
-      tel: params.get("tel") || "",
-      postal: params.get("postal") || "",
-      address: params.get("address") || "",
-      note: params.get("note") || "",
-      model: params.get("model") || "内野手用",
-      body: params.get("body") || "レッド",
-      lace: params.get("lace") || "ネイビー",
-      stitch: params.get("stitch") || "ホワイト",
-      embroidery: params.get("embroidery") || "R. Takumi",
-      price: params.get("price") || "55000"
-    };
-
-    try {
-      const response = await fetch(GAS_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const result = await response.json();
-
-      if (!result.success) {
-        throw new Error(result.error || "送信に失敗しました。");
-      }
-
-      window.location.href = "./thanks.html";
-    } catch (error) {
-      alert("注文受付の送信に失敗しました。\n\nエラー内容：\n" + (error && error.message ? error.message : String(error)));
-      console.error(error);
-
-      if (btn) {
-        btn.disabled = false;
-        btn.textContent = originalText;
-      }
-    }
-  });
-})();
-</script>
-
 </body>
 </html>

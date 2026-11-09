@@ -153,13 +153,13 @@
       }
     }
   </style>
-</head>
+<style>[hidden]{display:none!important}</style></head>
 
 <body>
 
   <header>
-    <a href="/glove-lp/" class="logo">ENLUMO</a>
-    <a href="/glove-lp/" class="back-btn">← トップページへ戻る</a>
+    <a href="./index.html" class="logo">ENLUMO</a>
+    <a href="./index.html" class="back-btn">← トップページへ戻る</a>
   </header>
 
   <main>
@@ -178,12 +178,15 @@
         ひとつのグローブに込めるお手伝いをします。
       </p>
 
-      <a href="/glove-lp/" class="home-btn">
+      <a href="https://lin.ee/WQajS4j" class="home-btn" id="next-contact" target="_blank" rel="noopener noreferrer">
+        LINEのトーク画面を開く
+      </a>
+      <br><br><a href="./index.html" class="back-btn">
         トップページへ戻る
       </a>
 
-      <p class="note">
-        ※ ご入力いただいたメールアドレス宛に返信させていただく場合があります。
+      <p class="note" id="reply-note">
+        LINE対応の方は、ENLUMO公式LINEのトーク画面でご連絡をお待ちください。
       </p>
 
     </div>
@@ -193,5 +196,15 @@
     © ENLUMO MEMORIAL GLOVE
   </footer>
 
-</body>
+<script>
+const params = new URLSearchParams(location.search);
+if (params.get('channel') === 'email') {
+  document.getElementById('reply-note').textContent = 'ご入力いただいたメールアドレスへご連絡します。迷惑メールフォルダもご確認ください。';
+  document.getElementById('next-contact').hidden = true;
+}
+if (params.get('type') === 'order') {
+  document.querySelector('h1').textContent = '注文リクエストを受け付けました';
+  document.querySelector('.message').textContent = '担当者より、ご指定の連絡方法で仕様・刺繍・納期の確認をさせていただきます。内容の確定・ご入金後に正式なご注文となります。';
+}
+</script></body>
 </html>

@@ -37,6 +37,8 @@
     .note{margin-top:12px;color:var(--muted);font-size:12px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
     @media(max-width:820px){.wrap{padding:20px 15px 48px}header{padding-bottom:18px}.brand{font-size:24px}.hero{padding:28px 0 20px}.grid{grid-template-columns:1fr}.card{padding:18px}.preview{min-height:190px}}
   </style>
+  <link rel="stylesheet" href="./order-support.css">
+  <script src="./order-support.js"></script>
 </head>
 <body>
   <div class="wrap">
@@ -47,8 +49,8 @@
 
     <section class="hero">
       <p class="eyebrow">ORDER REQUEST</p>
-      <h1>このグローブを請求する</h1>
-      <p class="lead">シミュレーション内容をご確認のうえ、お客様情報をご入力ください。</p>
+      <h1>このグローブで注文を相談する</h1>
+      <p class="lead">LINEのご登録後、シミュレーション内容とお客様情報をご確認ください。</p>
     </section>
 
     <div class="grid">
@@ -78,8 +80,9 @@
       </section>
 
       <section class="card">
-        <h2>お客様情報</h2>
-        <form action="./confirm.html" method="get">
+        <form id="order-form" action="./confirm.html" method="get">
+          <div data-contact-preference></div>
+          <h2>STEP 2 / お客様情報</h2>
           <input type="hidden" name="model" id="model">
           <input type="hidden" name="body" id="body">
           <input type="hidden" name="lace" id="lace">
@@ -142,6 +145,15 @@
         price: "55000"
       };
 
+      const form = document.getElementById("order-form");
+      ENLUMOSupport.mount(form, params);
+      for (const key of ["name","kana","email","tel","postal","address","note"]) {
+        if (params.has(key)) form.elements[key].value = params.get(key);
+      }
+      form.addEventListener("submit", event => {
+        const error = ENLUMOSupport.validateContact(Object.fromEntries(new FormData(form)));
+        if (error) { event.preventDefault(); alert(error); }
+      });
       const values = {};
       Object.keys(defaults).forEach(key => {
         values[key] = params.get(key) || defaults[key];

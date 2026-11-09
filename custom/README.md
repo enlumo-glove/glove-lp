@@ -1,4 +1,4 @@
-# ENISHI 3D Customizer v2
+# ENLUMO 3D Customizer v2
 
 GitHub Pages用です。
 

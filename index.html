@@ -106,9 +106,7 @@
     /* Opening */
     #opening{
       position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
-      text-align:center;color:white;background:
-      linear-gradient(rgba(25,20,16,.62),rgba(25,20,16,.62)),
-      radial-gradient(circle at 50% 45%,#8d765f,#2c241e 70%);
+      text-align:center;color:#3b3027;background:radial-gradient(circle at 50% 45%,#fffdf8,#ede5d8 70%);
       backdrop-filter:blur(12px);animation:openingOut 1s ease 2.6s forwards;
     }
     #opening::before{
@@ -116,8 +114,9 @@
       background:radial-gradient(circle at center,rgba(255,255,255,.13),transparent 45%);
       filter:blur(18px)
     }
-    .opening-copy{position:relative;padding:30px;animation:copyIn 1.2s ease both}
+    .opening-copy{position:relative;padding:24px;width:100%;animation:copyIn 1.2s ease both}
     .opening-logo{display:block;width:min(620px,82vw);max-height:62vh;object-fit:contain;margin:auto;filter:drop-shadow(0 14px 35px rgba(0,0,0,.18))}
+    .opening-copy .opening-logo{margin-bottom:28px}
     .opening-copy small{display:block;letter-spacing:5px;margin-bottom:20px;opacity:.78}
     .opening-copy h1{font-size:clamp(30px,5vw,62px);font-weight:400;line-height:1.55}
     @keyframes copyIn{from{opacity:0;transform:translateY(12px);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
@@ -284,11 +283,18 @@
       .hero .main-btn{width:100%;max-width:360px;min-height:52px;text-align:center;font-size:16px}
       .glove-box{min-height:0}.hero-glove{width:100%;max-width:440px;max-height:380px;object-fit:contain}
     }
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+    @media(prefers-reduced-motion:reduce){#opening{display:none!important}html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
 
   </style>
 <link rel="stylesheet" href="./brand.css"></head>
 <body>
+  <div id="opening" aria-hidden="true">
+    <div class="opening-copy">
+      <img class="opening-logo" src="./enlumo-logo-swallows.webp" alt="" width="620" height="202" fetchpriority="high">
+      <h1>野球好きな誰かにとって、<br>一生の思い出になる。</h1>
+    </div>
+  </div>
+
  <header>
   <a href="./index.html" class="logo" aria-label="ENLUMO トップへ">
 <img class="brand-lockup" src="./enlumo-logo-swallows.webp" alt="ENLUMO" width="240" height="52">

@@ -107,8 +107,9 @@
     #opening{
       position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
       text-align:center;color:#3b3027;background:radial-gradient(circle at 50% 45%,#fffdf8,#ede5d8 70%);
-      backdrop-filter:blur(12px);animation:openingOut 1s ease 2.6s forwards;
+      backdrop-filter:blur(12px);opacity:1;visibility:visible;pointer-events:auto;
     }
+    #opening.is-leaving{animation:openingOut 1s ease 2.6s forwards}
     #opening::before{
       content:"";position:absolute;inset:-20px;
       background:radial-gradient(circle at center,rgba(255,255,255,.13),transparent 45%);
@@ -120,7 +121,7 @@
     .opening-copy small{display:block;letter-spacing:5px;margin-bottom:20px;opacity:.78}
     .opening-copy h1{font-size:clamp(30px,5vw,62px);font-weight:400;line-height:1.55}
     @keyframes copyIn{from{opacity:0;transform:translateY(12px);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
-    @keyframes openingOut{to{opacity:0;visibility:hidden;pointer-events:none}}
+    @keyframes openingOut{from{opacity:1;visibility:visible}to{opacity:0;visibility:hidden;pointer-events:none}}
 
     .hero{
       min-height:100vh;
@@ -480,6 +481,33 @@
       });
     }, {threshold:.35});
     document.querySelectorAll('section[id]').forEach(el => observer.observe(el));
+  </script>
+  <script>
+    // Show the ENLUMO introduction on every visit, including browser back/forward restores.
+    (() => {
+      const overlay = document.getElementById('opening');
+      if (!overlay) return;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const playIntro = () => {
+        if (reducedMotion.matches) {
+          overlay.hidden = true;
+          overlay.setAttribute('aria-hidden', 'true');
+          return;
+        }
+        overlay.hidden = false;
+        overlay.setAttribute('aria-hidden', 'false');
+        overlay.classList.remove('is-leaving');
+        void overlay.offsetWidth;
+        overlay.classList.add('is-leaving');
+      };
+      overlay.addEventListener('animationend', event => {
+        if (event.animationName === 'openingOut') {
+          overlay.setAttribute('aria-hidden', 'true');
+          overlay.hidden = true;
+        }
+      });
+      window.addEventListener('pageshow', playIntro);
+    })();
   </script>
 </body>
 </html>

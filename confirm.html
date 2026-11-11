@@ -200,7 +200,7 @@
 
           <div class="price-row">
             <span class="price-label">商品価格</span>
-            <div><span class="price" id="show-price">¥49,000</span> <small>税込</small></div>
+            <div><span class="price" id="show-price">¥55,000</span> <small>税込</small></div>
           </div>
 
           <div class="delivery">
@@ -253,13 +253,13 @@
     const params = new URLSearchParams(location.search);
     const fields = ["model","body","lace","stitch","embroidery","embroidery_layout","price","name","kana","email","tel","postal","address","note","contact_method","line_ready"];
     const payload = Object.fromEntries(fields.map(key => [key, params.get(key) || ""]));
-    payload.price = "49000";
+    payload.price = "55000";
     payload.contact_method = payload.contact_method || "line";
     for (const key of fields) {
       const el = document.getElementById("show-" + key);
       if (el) el.textContent = payload[key] || "なし";
     }
-    const price = Number(String(payload.price).replace(/[^\d]/g, "")) || 49000;
+    const price = Number(String(payload.price).replace(/[^\d]/g, "")) || 55000;
     document.getElementById("show-price").textContent = "¥" + price.toLocaleString("ja-JP");
     const editUrl = "./order.html?" + params.toString();
     document.getElementById("support-edit").href = editUrl;

@@ -19,7 +19,7 @@
     .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px}.card h2{font-size:21px;margin:0 0 18px}
     .preview{min-height:230px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,#f6f1ea,#fffdfa);display:flex;align-items:center;justify-content:center;margin-bottom:20px;text-align:center;padding:18px}
     .glove-mark{width:150px;height:120px;border:5px solid #6d1f1c;background:#b7473e;border-radius:46% 54% 47% 53% / 44% 46% 54% 56%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:700;letter-spacing:.08em;box-shadow:0 8px 18px rgba(47,41,36,.08)}
-    .preview small{display:block;margin-top:12px;color:var(--muted);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+    .preview small{display:block;margin-top:12px;color:var(--muted);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.preview img{display:block;width:100%;max-height:420px;object-fit:contain;border-radius:10px}.consent-links{font-size:12px;color:var(--muted)}.check .policy-link{font-weight:500}
     .summary{margin:0}.summary-row{display:flex;justify-content:space-between;gap:20px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px}
     .summary-row dt{color:var(--muted)}.summary-row dd{margin:0;font-weight:600;text-align:right}
     .price-row{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding-top:20px}.price-row span{color:var(--muted);font-size:14px}
@@ -56,10 +56,7 @@
     <div class="grid">
       <section class="card">
         <h2>シミュレーション内容</h2>
-        <div class="preview">
-          <div>
-            <div class="glove-mark">ENLUMO<br>GLOVE</div>
-            <small>選択した3Dグローブのイメージ</small>
+        <div class="preview"><div><img id="preview-image" alt="選択したグローブのシミュレーション" hidden><div class="glove-mark" id="preview-placeholder">ENLUMO<br>GLOVE</div><small>選択したグローブのシミュレーション</small>
           </div>
         </div>
         <dl class="summary">
@@ -67,7 +64,9 @@
           <div class="summary-row"><dt>本体カラー</dt><dd id="show-body">レッド</dd></div>
           <div class="summary-row"><dt>レース</dt><dd id="show-lace">ネイビー</dd></div>
           <div class="summary-row"><dt>ステッチ</dt><dd id="show-stitch">ホワイト</dd></div>
-          <div class="summary-row"><dt>刺繍</dt><dd id="show-embroidery">R. Takumi</dd></div>
+          <div class="summary-row"><dt>刺繍</dt><dd id="show-embroidery">なし</dd></div>
+          <div class="summary-row"><dt>刺繍数</dt><dd id="show-count">0箇所</dd></div>
+          <div class="summary-row"><dt>刺繍追加料金</dt><dd id="show-extra">¥0</dd></div>
         </dl>
         <div class="price-row">
           <span>商品価格</span>
@@ -80,7 +79,7 @@
       </section>
 
       <section class="card">
-        <form id="order-form" action="./confirm.html" method="get">
+        <form id="order-form">
           <div data-contact-preference></div>
           <h2>STEP 2 / お客様情報</h2>
           <input type="hidden" name="model" id="model">
@@ -89,6 +88,8 @@
           <input type="hidden" name="stitch" id="stitch">
           <input type="hidden" name="embroidery" id="embroidery"><input type="hidden" name="embroidery_layout" id="embroidery_layout">
           <input type="hidden" name="price" id="price">
+          <input type="hidden" name="embroidery_count" id="embroidery_count">
+          <input type="hidden" name="embroidery_extra" id="embroidery_extra">
 
           <div class="field">
             <label for="name">お名前<span class="required">必須</span></label>
@@ -119,11 +120,9 @@
             <textarea id="note" name="note" placeholder="刺繍・納期など、ご希望があればご記入ください。"></textarea>
           </div>
 
-          <label class="check">
-            <input type="checkbox" required>
-            <span>グローブの仕様・価格・納期目安（約2か月）を確認しました。</span>
-          </label>
-
+          <label class="check"><input type="checkbox" name="privacy_consent" value="yes" required><span><a class="policy-link" href="./index.html#privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>を確認し、同意します。</span></label>
+          <label class="check"><input type="checkbox" name="acquisition_consent" value="yes" required><span><a class="policy-link" href="./index.html#personal-data-acquisition" target="_blank" rel="noopener">個人情報の取得・利用に関する説明</a>に同意します。</span></label>
+          <label class="check"><input type="checkbox" name="specification_consent" value="yes" required><span>グローブの仕様・価格・納期目安（約2か月）を確認しました。</span></label>
           <div class="actions">
             <button type="submit">入力内容を確認する</button>
             <a class="secondary" href="./custom/">シミュレーションに戻る</a>
@@ -170,6 +169,40 @@
 
       const priceNumber = Number(String(values.price).replace(/[^\d]/g,"")) || 55000;
       document.getElementById("show-price").textContent = "¥" + priceNumber.toLocaleString("ja-JP");
+    })();
+  </script>
+</body>
+</html>  <script>
+    (() => {
+      let saved={};try{saved=JSON.parse(sessionStorage.getItem("enlumo_order_draft")||"{}");}catch{}
+      const form=document.getElementById("order-form");
+      const restore={...(saved.customer||{}),...Object.fromEntries(new URLSearchParams(location.search))};
+      ENLUMOSupport.mount(form,new URLSearchParams(restore));
+      const defaults={model:"ENLUMO カスタムグローブ",body:"アイボリー",lace:"ゴールド",stitch:"#76513b",embroidery:"なし",embroidery_layout:"",embroidery_count:"0",embroidery_extra:"0",price:"55000"};
+      const values={...defaults,...saved};
+      for(const key of Object.keys(defaults)){const el=document.getElementById(key);if(el)el.value=String(values[key]??defaults[key]);}
+      const prior=saved.customer||{};
+      for(const key of ["name","kana","email","tel","postal","address","note"])if(prior[key])form.elements[key].value=prior[key];
+      for(const key of ["privacy_consent","acquisition_consent","specification_consent"])if(prior[key]==="yes"&&form.elements[key])form.elements[key].checked=true;
+      document.getElementById("show-model").textContent=values.model;
+      document.getElementById("show-body").textContent=values.body;
+      document.getElementById("show-lace").textContent=values.lace;
+      document.getElementById("show-stitch").textContent=values.stitch;
+      document.getElementById("show-embroidery").textContent=values.embroidery;
+      const count=Number(values.embroidery_count)||0,extra=Number(values.embroidery_extra)||0,price=Number(values.price)||55000;
+      document.getElementById("show-count").textContent=count+"箇所";
+      document.getElementById("show-extra").textContent="¥"+extra.toLocaleString("ja-JP");
+      document.getElementById("show-price").textContent="¥"+price.toLocaleString("ja-JP");
+      if(saved.preview){const image=document.getElementById("preview-image");image.src=saved.preview;image.hidden=false;document.getElementById("preview-placeholder").hidden=true;}
+      form.addEventListener("submit",event=>{
+        event.preventDefault();
+        if(!form.reportValidity())return;
+        const customer=Object.fromEntries(new FormData(form));
+        const error=ENLUMOSupport.validateContact(customer);
+        if(error){alert(error);return;}
+        sessionStorage.setItem("enlumo_order_draft",JSON.stringify({...values,customer}));
+        location.href="./confirm.html";
+      });
     })();
   </script>
 </body>

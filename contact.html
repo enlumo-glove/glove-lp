@@ -159,12 +159,9 @@
       border-color: #3b3027;
     }
 
-    .privacy {
-      font-size: 12px;
-      color: #766b61;
-      margin: 10px 0 25px;
-      text-align: center;
-    }
+    .consent-check{display:flex;align-items:flex-start;gap:10px;text-align:left;font-size:13px;color:#62594f;margin:14px 0;line-height:1.7}
+    .consent-check input{width:18px;min-width:18px;margin-top:4px}
+    .consent-check a{text-decoration:underline}
 
     button {
       width: 100%;
@@ -396,9 +393,9 @@
             ></textarea>
           </div>
 
-          <p class="privacy">
-            ご入力いただいた情報は、お問い合わせへの対応のためにのみ使用します。
-          </p>
+          <label class="consent-check"><input type="checkbox" name="privacy_consent" value="yes" required><span><a href="./privacy.html#privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>を確認し、同意します。</span></label>
+          <label class="consent-check"><input type="checkbox" name="acquisition_consent" value="yes" required><span><a href="./privacy.html#personal-data-acquisition" target="_blank" rel="noopener">個人情報の取得・利用に関する同意</a>に同意します。</span></label>
+          <label class="consent-check"><input type="checkbox" name="marketing_consent" value="yes"><span>新商品・サービス、キャンペーン等の案内をメール・LINEで受け取ることに同意します（任意）。</span></label>
 
           <button type="submit">
             相談内容を送信する →
@@ -475,7 +472,7 @@
     button.textContent = "送信中...";
 
     const formData = new FormData(form);
-    formData.set("message", String(formData.get("message") || "") + "\n\n" + ENLUMOSupport.supportNote(supportData));
+    formData.set("message", String(formData.get("message") || "") + "\n\n" + ENLUMOSupport.supportNote(supportData) + "\n【個人情報の同意】取得・利用：yes／販促案内：" + (formData.get("marketing_consent") === "yes" ? "yes" : "no"));
     formData.set("_subject", "ENLUMO ご相談（" + (supportData.contact_method === "email" ? "メール対応" : "LINE対応") + "）");
 
     try {

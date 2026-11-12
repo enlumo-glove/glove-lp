@@ -120,9 +120,10 @@
             <textarea id="note" name="note" placeholder="刺繍・納期など、ご希望があればご記入ください。"></textarea>
           </div>
 
-          <label class="check"><input type="checkbox" name="privacy_consent" value="yes" required><span><a class="policy-link" href="./index.html#privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>を確認し、同意します。</span></label>
-          <label class="check"><input type="checkbox" name="acquisition_consent" value="yes" required><span><a class="policy-link" href="./index.html#personal-data-acquisition" target="_blank" rel="noopener">個人情報の取得・利用に関する説明</a>に同意します。</span></label>
+          <label class="check"><input type="checkbox" name="privacy_consent" value="yes" required><span><a class="policy-link" href="./privacy.html#privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>を確認し、同意します。</span></label>
+          <label class="check"><input type="checkbox" name="acquisition_consent" value="yes" required><span><a class="policy-link" href="./privacy.html#personal-data-acquisition" target="_blank" rel="noopener">個人情報の取得・利用に関する同意</a>に同意します。</span></label>
           <label class="check"><input type="checkbox" name="specification_consent" value="yes" required><span>グローブの仕様・価格・納期目安（約2か月）を確認しました。</span></label>
+          <label class="check"><input type="checkbox" name="marketing_consent" value="yes"><span>新商品・サービス、キャンペーン等の案内をメール・LINEで受け取ることに同意します（任意）。</span></label>
           <div class="actions">
             <button type="submit">入力内容を確認する</button>
             <a class="secondary" href="./custom/">シミュレーションに戻る</a>
@@ -183,7 +184,7 @@
       for(const key of Object.keys(defaults)){const el=document.getElementById(key);if(el)el.value=String(values[key]??defaults[key]);}
       const prior=saved.customer||{};
       for(const key of ["name","kana","email","tel","postal","address","note"])if(prior[key])form.elements[key].value=prior[key];
-      for(const key of ["privacy_consent","acquisition_consent","specification_consent"])if(prior[key]==="yes"&&form.elements[key])form.elements[key].checked=true;
+      for(const key of ["privacy_consent","acquisition_consent","specification_consent","marketing_consent"])if(prior[key]==="yes"&&form.elements[key])form.elements[key].checked=true;
       document.getElementById("show-model").textContent=values.model;
       document.getElementById("show-body").textContent=values.body;
       document.getElementById("show-lace").textContent=values.lace;
@@ -198,6 +199,7 @@
         event.preventDefault();
         if(!form.reportValidity())return;
         const customer=Object.fromEntries(new FormData(form));
+        customer.marketing_consent=form.elements.marketing_consent.checked?"yes":"no";
         const error=ENLUMOSupport.validateContact(customer);
         if(error){alert(error);return;}
         sessionStorage.setItem("enlumo_order_draft",JSON.stringify({...values,customer}));

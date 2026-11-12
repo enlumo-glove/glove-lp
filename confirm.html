@@ -308,9 +308,10 @@
   (() => {
     let saved={};try{saved=JSON.parse(sessionStorage.getItem("enlumo_order_draft")||"{}");}catch{}
     const customer=saved.customer||{};
-    const fields=["model","body","lace","stitch","embroidery","embroidery_layout","embroidery_count","embroidery_extra","price","name","kana","email","tel","postal","address","note","contact_method","line_ready","privacy_consent","acquisition_consent","specification_consent"];
+    const fields=["model","body","lace","stitch","embroidery","embroidery_layout","embroidery_count","embroidery_extra","price","name","kana","email","tel","postal","address","note","contact_method","line_ready","privacy_consent","acquisition_consent","specification_consent","marketing_consent"];
     const payload=Object.fromEntries(fields.map(key=>[key,(customer[key]??saved[key]??"")]));
     payload.contact_method=payload.contact_method||"line";
+    payload.marketing_consent=payload.marketing_consent==="yes"?"yes":"no";
     for(const key of fields){const el=document.getElementById("show-"+key);if(el)el.textContent=payload[key]||"なし";}
     const price=Number(payload.price)||55000;document.getElementById("show-price").textContent="¥"+price.toLocaleString("ja-JP");
     const count=Number(payload.embroidery_count)||0,extra=Number(payload.embroidery_extra)||0;

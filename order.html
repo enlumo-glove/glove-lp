@@ -19,7 +19,7 @@
     .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px}.card h2{font-size:21px;margin:0 0 18px}
     .preview{min-height:230px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,#f6f1ea,#fffdfa);display:flex;align-items:center;justify-content:center;margin-bottom:20px;text-align:center;padding:18px}
     .glove-mark{width:150px;height:120px;border:5px solid #6d1f1c;background:#b7473e;border-radius:46% 54% 47% 53% / 44% 46% 54% 56%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:700;letter-spacing:.08em;box-shadow:0 8px 18px rgba(47,41,36,.08)}
-    .preview small{display:block;margin-top:12px;color:var(--muted);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.preview img{display:block;width:100%;max-height:420px;object-fit:contain;border-radius:10px}.consent-links{font-size:12px;color:var(--muted)}.check .policy-link{font-weight:500}
+    .preview small{display:block;margin-top:12px;color:var(--muted);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.preview img{display:block;width:100%;max-height:420px;object-fit:contain;border-radius:10px}.view-switcher{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:-8px 0 18px}.view-switcher button{min-height:40px;padding:8px 4px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font-size:12px}.view-switcher button[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}.stitch-value{display:inline-flex;align-items:center;justify-content:flex-end;gap:8px}.stitch-swatch{display:inline-block;width:16px;height:16px;border:1px solid #aaa;border-radius:4px;vertical-align:middle}.consent-links{font-size:12px;color:var(--muted)}.check .policy-link{font-weight:500}
     .summary{margin:0}.summary-row{display:flex;justify-content:space-between;gap:20px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px}
     .summary-row dt{color:var(--muted)}.summary-row dd{margin:0;font-weight:600;text-align:right}
     .price-row{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding-top:20px}.price-row span{color:var(--muted);font-size:14px}
@@ -56,14 +56,13 @@
     <div class="grid">
       <section class="card">
         <h2>シミュレーション内容</h2>
-        <div class="preview"><div><img id="preview-image" alt="選択したグローブのシミュレーション" hidden><div class="glove-mark" id="preview-placeholder">ENLUMO<br>GLOVE</div><small>選択したグローブのシミュレーション</small>
-          </div>
-        </div>
+        <div class="preview"><div><img id="preview-image" alt="選択したグローブのシミュレーション" hidden><div class="glove-mark" id="preview-placeholder">ENLUMO<br>GLOVE</div><small id="preview-face-label">選択したグローブのシミュレーション</small></div></div>
+        <div id="view-switcher" class="view-switcher" aria-label="グローブの表示方向" hidden><button type="button" data-view="front" aria-pressed="false">捕球面</button><button type="button" data-view="back" aria-pressed="false">手の甲側</button><button type="button" data-view="pinky" aria-pressed="false">小指側</button><button type="button" data-view="thumb" aria-pressed="false">親指側</button></div>
         <dl class="summary">
           <div class="summary-row"><dt>モデル</dt><dd id="show-model">内野手用</dd></div>
           <div class="summary-row"><dt>本体カラー</dt><dd id="show-body">レッド</dd></div>
           <div class="summary-row"><dt>レース</dt><dd id="show-lace">ネイビー</dd></div>
-          <div class="summary-row"><dt>ステッチ</dt><dd id="show-stitch">ホワイト</dd></div>
+          <div class="summary-row"><dt>ステッチ（縫い糸）</dt><dd class="stitch-value"><span id="stitch-swatch" class="stitch-swatch" aria-hidden="true"></span><span id="show-stitch">カラーコード #76513b</span></dd></div>
           <div class="summary-row"><dt>刺繍</dt><dd id="show-embroidery">なし</dd></div>
           <div class="summary-row"><dt>刺繍数</dt><dd id="show-count">0箇所</dd></div>
           <div class="summary-row"><dt>刺繍追加料金</dt><dd id="show-extra">¥0</dd></div>
@@ -72,9 +71,10 @@
           <span>商品価格</span>
           <div><span class="price" id="show-price">¥55,000</span> <small>税込</small></div>
         </div>
+        <p class="help">表示の「#76513b」のような値は、縫い糸色を指定するカラーコードです。</p>
         <div class="delivery">
           <strong>納期の目安：約2か月</strong>
-          ご注文内容の確定後、完成・発送まで約2か月程度を予定しています。仕様や時期により前後する場合があります。
+          ご注文内容の確定後、完成・発送まで約2か月程度を予定しています。仕様や時期により前後する場合があります。<br><small>本商品は軟式用が基本です。硬式用をご希望の場合は、ご注文時に備考欄へご記入ください。</small>
         </div>
       </section>
 
@@ -118,12 +118,13 @@
           <div class="field">
             <label for="note">備考</label>
             <textarea id="note" name="note" placeholder="刺繍・納期など、ご希望があればご記入ください。"></textarea>
+            <p class="help">硬式用をご希望の場合は、その旨をこちらにご記入ください。</p>
           </div>
 
           <label class="check"><input type="checkbox" name="privacy_consent" value="yes" required><span><a class="policy-link" href="./privacy.html#privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>を確認し、同意します。</span></label>
-          <label class="check"><input type="checkbox" name="acquisition_consent" value="yes" required><span><a class="policy-link" href="./privacy.html#personal-data-acquisition" target="_blank" rel="noopener">個人情報の取得・利用に関する同意</a>に同意します。</span></label>
+          <label class="check"><input type="checkbox" name="acquisition_consent" value="yes" required><span><a class="policy-link" href="./consent.html" target="_blank" rel="noopener">個人情報の取得・利用に関する同意</a>に同意します。</span></label>
           <label class="check"><input type="checkbox" name="specification_consent" value="yes" required><span>グローブの仕様・価格・納期目安（約2か月）を確認しました。</span></label>
-          <label class="check"><input type="checkbox" name="marketing_consent" value="yes"><span>新商品・サービス、キャンペーン等の案内をメール・LINEで受け取ることに同意します（任意）。</span></label>
+          
           <div class="actions">
             <button type="submit">入力内容を確認する</button>
             <a class="secondary" href="./custom/">シミュレーションに戻る</a>
@@ -184,22 +185,22 @@
       for(const key of Object.keys(defaults)){const el=document.getElementById(key);if(el)el.value=String(values[key]??defaults[key]);}
       const prior=saved.customer||{};
       for(const key of ["name","kana","email","tel","postal","address","note"])if(prior[key])form.elements[key].value=prior[key];
-      for(const key of ["privacy_consent","acquisition_consent","specification_consent","marketing_consent"])if(prior[key]==="yes"&&form.elements[key])form.elements[key].checked=true;
+      for(const key of ["privacy_consent","acquisition_consent","specification_consent"])if(prior[key]==="yes"&&form.elements[key])form.elements[key].checked=true;
       document.getElementById("show-model").textContent=values.model;
       document.getElementById("show-body").textContent=values.body;
       document.getElementById("show-lace").textContent=values.lace;
-      document.getElementById("show-stitch").textContent=values.stitch;
+      document.getElementById("show-stitch").textContent="カラーコード "+values.stitch;
+      document.getElementById("stitch-swatch").style.backgroundColor=/^#[0-9a-f]{6}$/i.test(values.stitch)?values.stitch:"#76513b";
       document.getElementById("show-embroidery").textContent=values.embroidery;
       const count=Number(values.embroidery_count)||0,extra=Number(values.embroidery_extra)||0,price=Number(values.price)||55000;
       document.getElementById("show-count").textContent=count+"箇所";
       document.getElementById("show-extra").textContent="¥"+extra.toLocaleString("ja-JP");
       document.getElementById("show-price").textContent="¥"+price.toLocaleString("ja-JP");
-      if(saved.preview){const image=document.getElementById("preview-image");image.src=saved.preview;image.hidden=false;document.getElementById("preview-placeholder").hidden=true;}
+      if(saved.preview){const image=document.getElementById("preview-image"),switcher=document.getElementById("view-switcher"),faceLabel=document.getElementById("preview-face-label");const faceNames={front:"捕球面",back:"手の甲側",pinky:"小指側",thumb:"親指側"};const selected=Object.keys(faceNames).find(key=>faceNames[key]===saved.face)||"front";const previews=saved.previews&&Object.keys(saved.previews).length?saved.previews:null;function showPreview(face){image.src=(previews&&previews[face])||saved.preview;image.alt=faceNames[face]+"から見たグローブのシミュレーション";faceLabel.textContent=faceNames[face]+"から見たグローブのシミュレーション";document.querySelectorAll("[data-view]").forEach(button=>button.setAttribute("aria-pressed",button.dataset.view===face?"true":"false"));}image.hidden=false;document.getElementById("preview-placeholder").hidden=true;if(previews){switcher.hidden=false;document.querySelectorAll("[data-view]").forEach(button=>button.addEventListener("click",()=>showPreview(button.dataset.view)));}showPreview(selected);}
       form.addEventListener("submit",event=>{
         event.preventDefault();
         if(!form.reportValidity())return;
         const customer=Object.fromEntries(new FormData(form));
-        customer.marketing_consent=form.elements.marketing_consent.checked?"yes":"no";
         const error=ENLUMOSupport.validateContact(customer);
         if(error){alert(error);return;}
         sessionStorage.setItem("enlumo_order_draft",JSON.stringify({...values,customer}));

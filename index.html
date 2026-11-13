@@ -113,7 +113,7 @@
     #opening.is-leaving{animation:openingOut 1s ease 2.6s forwards}
     @media(max-width:850px){
       #opening{backdrop-filter:none}
-      #opening.is-leaving{animation:openingOut 1.15s ease-in-out .65s forwards}
+      #opening.is-leaving{animation:openingOut 2.6s linear .65s forwards}
     }
     #opening::before{
       content:"";position:absolute;inset:-20px;
@@ -512,7 +512,7 @@
         }
         overlay.classList.add('is-leaving');
         // Dismiss even when the browser skips the animationend event.
-        dismissTimer = window.setTimeout(finishIntro, mobile ? 2500 : 4300);
+        dismissTimer = window.setTimeout(finishIntro, mobile ? 4000 : 4300);
       };
 
       overlay.addEventListener('animationend', event => {

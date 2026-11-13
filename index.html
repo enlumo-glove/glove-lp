@@ -109,7 +109,9 @@
       text-align:center;color:#3b3027;background:radial-gradient(circle at 50% 45%,#fffdf8,#ede5d8 70%);
       backdrop-filter:blur(12px);opacity:1;visibility:visible;pointer-events:auto;
     }
+    #opening[hidden]{display:none}
     #opening.is-leaving{animation:openingOut 1s ease 2.6s forwards}
+    @media(max-width:850px){#opening.is-leaving{animation-duration:.55s;animation-delay:.95s}}
     #opening::before{
       content:"";position:absolute;inset:-20px;
       background:radial-gradient(circle at center,rgba(255,255,255,.13),transparent 45%);
@@ -289,7 +291,7 @@
   </style>
 <link rel="stylesheet" href="./brand.css"></head>
 <body>
-  <div id="opening" aria-hidden="true">
+  <div id="opening" aria-hidden="true" hidden>
     <div class="opening-copy">
       <img class="opening-logo" src="./enlumo-logo-swallows.webp" alt="" width="620" height="202" fetchpriority="high">
       <h1>野球好きな誰かにとって、<br>一生の思い出になる。</h1>
@@ -483,36 +485,41 @@
     document.querySelectorAll('section[id]').forEach(el => observer.observe(el));
   </script>
   <script>
-    // Show the ENLUMO introduction on every visit, including browser back/forward restores.
     (() => {
       const overlay = document.getElementById('opening');
       if (!overlay) return;
+
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-      let reducedMotionTimer;
+      const compactLayout = window.matchMedia('(max-width: 850px)');
+      let dismissTimer;
       const finishIntro = () => {
+        window.clearTimeout(dismissTimer);
         overlay.hidden = true;
-        overlay.setAttribute('aria-hidden', 'true');
       };
       const playIntro = () => {
-        window.clearTimeout(reducedMotionTimer);
-        overlay.hidden = false;
-        overlay.setAttribute('aria-hidden', 'false');
+        window.clearTimeout(dismissTimer);
         overlay.classList.remove('is-leaving');
+        overlay.hidden = false;
         void overlay.offsetWidth;
+
+        const mobile = compactLayout.matches;
         if (reducedMotion.matches) {
-          // Keep the branded opening screen visible without motion.
-          reducedMotionTimer = window.setTimeout(finishIntro, 2200);
+          dismissTimer = window.setTimeout(finishIntro, mobile ? 1200 : 2200);
           return;
         }
         overlay.classList.add('is-leaving');
+        // Dismiss even when the browser skips the animationend event.
+        dismissTimer = window.setTimeout(finishIntro, mobile ? 1700 : 3800);
       };
+
       overlay.addEventListener('animationend', event => {
-        if (event.animationName === 'openingOut') {
-          overlay.setAttribute('aria-hidden', 'true');
-          overlay.hidden = true;
-        }
+        if (event.target === overlay && event.animationName === 'openingOut') finishIntro();
       });
-      window.addEventListener('pageshow', playIntro);
+      window.addEventListener('pagehide', finishIntro);
+      window.addEventListener('pageshow', event => {
+        if (event.persisted) playIntro();
+      });
+      playIntro();
     })();
   </script>
 </body>

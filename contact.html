@@ -474,6 +474,7 @@
     const formData = new FormData(form);
     formData.set("message", String(formData.get("message") || "") + "\n\n" + ENLUMOSupport.supportNote(supportData) + "\n【個人情報の同意】取得・利用：yes");
     formData.set("_subject", "ENLUMO ご相談（" + (supportData.contact_method === "email" ? "メール対応" : "LINE対応") + "）");
+    formData.set("_cc", "taigamiyauchi@icloud.com");
 
     try {
       // ① Formspree → 運営側へ通知

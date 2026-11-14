@@ -29,7 +29,7 @@
     host.innerHTML = `<section class="contact-preference" aria-labelledby="contact-heading">
       <p class="support-step">STEP 1 / ご連絡方法</p>
       <h2 id="contact-heading">まずは公式LINEをご登録ください</h2>
-      <p>ご注文のご相談から、刺繍・仕様の確認、完成までのご連絡は、基本的にLINEで行います。</p>
+      <p>ご注文のご相談から、刺繍・仕様の確認、完成までのご連絡は、基本LINEで行います。</p>
       <input type="hidden" name="contact_method" id="contact-method" value="line">
       <fieldset id="line-fields">
         <ol><li>公式LINEを友だち追加</li><li>このページに戻って、お客様情報を入力</li></ol>

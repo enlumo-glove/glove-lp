@@ -63,10 +63,8 @@
       display:block;width:auto;height:auto;max-width:100%;
       max-height:min(58vh,460px);object-fit:contain;margin:0 auto
     }
-    .view-switcher{
-      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;
-      margin:0 0 18px
-    }
+    .view-switcher{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:-8px 0 18px}
+    .preview-column{min-width:0}
     .view-switcher button{
       min-width:0;min-height:42px;padding:8px 4px;border:1px solid var(--line);
       border-radius:8px;background:#fff;color:var(--text);font-size:12px
@@ -206,12 +204,14 @@
     <section class="card">
       <h2>グローブの仕様</h2>
       <div class="grid">
-        <div class="preview"><div><img id="preview-image" alt="選択したグローブのシミュレーション" hidden><div class="glove-mark" id="preview-placeholder">ENLUMO<br>GLOVE</div><small id="preview-face-label">選択したグローブのシミュレーション</small></div></div>
-        <div id="view-switcher" class="view-switcher" aria-label="グローブの表示方向" hidden>
-          <button type="button" data-view="front" aria-pressed="false">捕球面</button>
-          <button type="button" data-view="back" aria-pressed="false">手の甲側</button>
-          <button type="button" data-view="pinky" aria-pressed="false">小指側</button>
-          <button type="button" data-view="thumb" aria-pressed="false">親指側</button>
+        <div class="preview-column">
+          <div class="preview"><div><img id="preview-image" alt="選択したグローブのシミュレーション" hidden><div class="glove-mark" id="preview-placeholder">ENLUMO<br>GLOVE</div><small id="preview-face-label">選択したグローブのシミュレーション</small></div></div>
+          <div id="view-switcher" class="view-switcher" aria-label="グローブの表示方向" hidden>
+            <button type="button" data-view="front" aria-pressed="false">捕球面</button>
+            <button type="button" data-view="back" aria-pressed="false">手の甲側</button>
+            <button type="button" data-view="pinky" aria-pressed="false">小指側</button>
+            <button type="button" data-view="thumb" aria-pressed="false">親指側</button>
+          </div>
         </div>
 
         <div>

@@ -63,6 +63,17 @@
       display:block;width:auto;height:auto;max-width:100%;
       max-height:min(58vh,460px);object-fit:contain;margin:0 auto
     }
+    .view-switcher{
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;
+      margin:0 0 18px
+    }
+    .view-switcher button{
+      min-width:0;min-height:42px;padding:8px 4px;border:1px solid var(--line);
+      border-radius:8px;background:#fff;color:var(--text);font-size:12px
+    }
+    .view-switcher button[aria-pressed="true"]{
+      background:var(--accent);color:#fff;border-color:var(--accent)
+    }
     .glove-mark{
       width:150px;height:120px;border:5px solid #6d1f1c;background:#b7473e;
       border-radius:46% 54% 47% 53% / 44% 46% 54% 56%;
@@ -195,8 +206,12 @@
     <section class="card">
       <h2>グローブの仕様</h2>
       <div class="grid">
-        <div class="preview"><div><img id="preview-image" alt="選択したグローブのシミュレーション" hidden><div class="glove-mark" id="preview-placeholder">ENLUMO<br>GLOVE</div><small>選択したグローブのシミュレーション</small>
-          </div>
+        <div class="preview"><div><img id="preview-image" alt="選択したグローブのシミュレーション" hidden><div class="glove-mark" id="preview-placeholder">ENLUMO<br>GLOVE</div><small id="preview-face-label">選択したグローブのシミュレーション</small></div></div>
+        <div id="view-switcher" class="view-switcher" aria-label="グローブの表示方向" hidden>
+          <button type="button" data-view="front" aria-pressed="false">捕球面</button>
+          <button type="button" data-view="back" aria-pressed="false">手の甲側</button>
+          <button type="button" data-view="pinky" aria-pressed="false">小指側</button>
+          <button type="button" data-view="thumb" aria-pressed="false">親指側</button>
         </div>
 
         <div>
@@ -205,7 +220,9 @@
             <div class="row"><dt>本体カラー</dt><dd id="show-body">—</dd></div>
             <div class="row"><dt>レース</dt><dd id="show-lace">—</dd></div>
             <div class="row"><dt>ステッチ</dt><dd id="show-stitch">—</dd></div>
-            <div class="row"><dt>刺繍</dt><dd id="show-embroidery">—</dd></div>\n        <div class="row"><dt>刺繍数</dt><dd id="show-embroidery_count">—</dd></div>\n        <div class="row"><dt>刺繍追加料金</dt><dd id="show-embroidery_extra">—</dd></div>
+            <div class="row"><dt>刺繍</dt><dd id="show-embroidery">—</dd></div>
+            <div class="row"><dt>刺繍数</dt><dd id="show-embroidery_count">—</dd></div>
+            <div class="row"><dt>刺繍追加料金</dt><dd id="show-embroidery_extra">—</dd></div>
           </dl>
 
           <div class="price-row">
@@ -330,7 +347,27 @@
     const count=Number(payload.embroidery_count)||0,extra=Number(payload.embroidery_extra)||0;
     const countEl=document.getElementById("show-embroidery_count");if(countEl)countEl.textContent=count+"箇所";
     const extraEl=document.getElementById("show-embroidery_extra");if(extraEl)extraEl.textContent="¥"+extra.toLocaleString("ja-JP");
-    if(saved.preview){const image=document.getElementById("preview-image");image.src=saved.preview;image.hidden=false;document.getElementById("preview-placeholder").hidden=true;}
+    if(saved.preview){
+      const image=document.getElementById("preview-image");
+      const switcher=document.getElementById("view-switcher");
+      const faceLabel=document.getElementById("preview-face-label");
+      const faceNames={front:"捕球面",back:"手の甲側",pinky:"小指側",thumb:"親指側"};
+      const selected=Object.keys(faceNames).find(key=>faceNames[key]===saved.face)||"front";
+      const previews=saved.previews&&Object.keys(saved.previews).length?saved.previews:null;
+      function showPreview(face){
+        image.src=(previews&&previews[face])||saved.preview;
+        image.alt=faceNames[face]+"から見たグローブのシミュレーション";
+        faceLabel.textContent=faceNames[face]+"から見たグローブのシミュレーション";
+        document.querySelectorAll("[data-view]").forEach(button=>button.setAttribute("aria-pressed",button.dataset.view===face?"true":"false"));
+      }
+      image.hidden=false;
+      document.getElementById("preview-placeholder").hidden=true;
+      if(previews){
+        switcher.hidden=false;
+        document.querySelectorAll("[data-view]").forEach(button=>button.addEventListener("click",()=>showPreview(button.dataset.view)));
+      }
+      showPreview(selected);
+    }
     const form=document.getElementById("confirm-form"),button=form.querySelector('button[type="submit"]');
     const editUrl="./order.html";
     document.getElementById("support-edit").href=editUrl;document.querySelector("header .back").href=editUrl;
